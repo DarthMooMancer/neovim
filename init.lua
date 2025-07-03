@@ -1,15 +1,20 @@
-vim.g.mapleader = " "
-vim.o.mouse =  ""
-vim.o.completeopt = "noselect"
-vim.o.termguicolors = true
-vim.o.wrap = false
-vim.o.relativenumber = true
-vim.o.scrolloff = 8
-vim.o.shiftwidth = 4
-vim.o.hlsearch = false
-vim.o.swapfile = false
-vim.o.showmode = false
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+	vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", "https://github.com/folke/lazy.nvim.git", lazypath })
+end
+vim.opt.rtp:prepend(lazypath)
+vim.opt.mouse =  ""
+vim.opt.completeopt = "noselect"
+vim.opt.termguicolors = true
+vim.opt.wrap = false
+vim.opt.relativenumber = true
+vim.opt.scrolloff = 8
+-- vim.opt.shiftwidth = 4
+vim.opt.hlsearch = false
+vim.opt.swapfile = false
+vim.opt.showmode = false
 
+vim.g.mapleader = " "
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
@@ -24,6 +29,17 @@ vim.keymap.set("n", "<leader><leader>", "<Cmd>FzfLua files<CR>")
 vim.keymap.set("n", "<leader>ge", "<Cmd>FzfLua grep<CR>")
 vim.keymap.set("n", "<leader>xx", "<Cmd>FzfLua diagnostics_workspace<CR>")
 
-require("darthmoomancer.lazy")
-
+require("lazy").setup("darthmoomancer.plugins")
 vim.lsp.enable({ "lua_ls", "clangd" })
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" }
+			}
+		}
+	}
+})
+
+require("everforest").setup({ transparent_background_level = 2 })
+vim.cmd.colorscheme('everforest')
