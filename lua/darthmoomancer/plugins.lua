@@ -1,8 +1,6 @@
 return {
-	"neovim/nvim-lspconfig",
-	"ibhagwan/fzf-lua",
-	"rafamadriz/friendly-snippets",
 	"neanias/everforest-nvim",
+	"neovim/nvim-lspconfig",
 	"cohama/lexima.vim",
 	"DarthMoomancer/Polydev",
 	{
