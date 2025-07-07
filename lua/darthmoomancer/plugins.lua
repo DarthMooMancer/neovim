@@ -11,16 +11,6 @@ return {
 		opts = {}
 	},
 	{
-		"nvim-lualine/lualine.nvim",
-		opts = {
-			options = {
-				theme = "everforest",
-				component_separators = "",
-				section_separators = { left = "", right = "" },
-			},
-		}
-	},
-	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		config = function()
