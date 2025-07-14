@@ -1,8 +1,38 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-	vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", "https://github.com/folke/lazy.nvim.git", lazypath })
-end
-vim.opt.rtp:prepend(lazypath)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "<CR>", "<CR>:cclose<CR>", { noremap = true, silent = true })
+  end,
+})
+
+vim.pack.add({
+	"neanias/everforest-nvim",
+	"neovim/nvim-lspconfig",
+	"cohama/lexima.vim",
+	"nvim-treesitter/nvim-treesitter",
+	"DarthMoomancer/Polydev",
+	{ src = "saghen/blink.cmp", version = "v1.*" },
+})
+
+require("blink.cmp").setup()
+require("everforest").setup({ transparent_background_level = 2 })
+require("nvim-treesitter.configs").setup({
+	highlight = { enable = true },
+	indent = { enable = true }
+})
+
+vim.cmd.colorscheme('everforest')
+vim.lsp.enable({ "lua_ls", "clangd" })
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" }
+			}
+		}
+	}
+})
+
 vim.opt.mouse =  ""
 vim.opt.completeopt = "noselect"
 vim.opt.termguicolors = true
@@ -17,18 +47,6 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set("n", "<leader>ff", "gg=G")
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzz")
-vim.keymap.set("n", "N", "Nzz")
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "qf",
-  callback = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "<CR>", "<CR>:cclose<CR>", { noremap = true, silent = true })
-  end,
-})
-
 vim.keymap.set("n", "<leader><leader>", function()
   local cwd = vim.fn.getcwd()
   local all_paths = vim.fn.globpath(cwd, "**", 0, 1)  -- get all paths recursively
@@ -53,7 +71,6 @@ vim.keymap.set("n", "<leader><leader>", function()
   vim.fn.setqflist(qf_list, 'r')
   vim.cmd("copen")
 end, { desc = "Open files in quickfix list" })
-
 vim.keymap.set("n", "<leader>xc", "<Cmd>cclose<CR>")
 vim.keymap.set("n", "<leader>xg", function()
   local input = vim.fn.input("Grep for: ")
@@ -61,23 +78,6 @@ vim.keymap.set("n", "<leader>xg", function()
     vim.cmd("silent! grep " .. vim.fn.shellescape(input) .. " | cwindow")
   end
 end)
-
 vim.keymap.set("n", "<leader>xx", function()
   vim.diagnostic.setqflist({ open = true })
 end, { desc = "Show diagnostics in quickfix" })
-
-
-require("lazy").setup("darthmoomancer.plugins")
-require("everforest").setup({ transparent_background_level = 2 })
-vim.cmd.colorscheme('everforest')
-
-vim.lsp.enable({ "lua_ls", "clangd" })
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = { "vim" }
-			}
-		}
-	}
-})
